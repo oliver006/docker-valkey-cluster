@@ -1,15 +1,12 @@
-version: '2'
 services:
-  redis-cluster:
-    environment:
-     IP: ${REDIS_CLUSTER_IP}
-     SENTINEL: ${REDIS_USE_SENTINEL}
-     STANDALONE: ${REDIS_USE_STANDALONE}
-    build:
-      context: .
-      args:
-        redis_version: '7.2.5'
-    hostname: server
+  valkey-cluster:
+    image: pvogel/valkey-cluster
     ports:
-      - '7000-7050:7000-7050'
-      - '5000-5010:5000-5010'
+        - 14000-14005:14000-14005/tcp
+    environment:
+        IP: ${VALKEY_CLUSTER_IP}
+        SENTINEL: ${VALKEY_USE_SENTINEL}
+        STANDALONE: ${VALKEY_USE_STANDALONE}
+        INITIAL_PORT: 14000
+        MASTERS: 3
+        SLAVES_PER_MASTER: 1

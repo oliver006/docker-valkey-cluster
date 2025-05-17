@@ -1,3 +1,6 @@
+## 2025-05-17
+* Updated to Valkey 8.0.3 via fork
+
 ## 2024-06-25
 
 * Added 7.2.x releases and published docker images
