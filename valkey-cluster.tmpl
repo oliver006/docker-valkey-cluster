@@ -2,7 +2,7 @@ bind ${BIND_ADDRESS}
 port ${PORT}
 cluster-enabled yes
 cluster-config-file nodes.conf
-cluster-node-timeout 5000
+cluster-node-timeout 15000
 appendonly yes
 dir /valkey-data/${PORT}
 protected-mode no
