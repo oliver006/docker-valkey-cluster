@@ -62,7 +62,7 @@ jobs:
           username: ${{ vars.DOCKERHUB_USER }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Setup Dockerfile
+      - name: Set up Dockerfile
         run: |
           export VERSION=${{ matrix.version }}
           envsubst < Dockerfile.tmpl > Dockerfile
@@ -104,7 +104,7 @@ jobs:
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
           path: /tmp/digests
-          pattern: digests-*-${{ matrix.flavor }}
+          pattern: digests-*-${{ matrix.version }}
           merge-multiple: true
 
       - name: Set up Docker Buildx
@@ -127,8 +127,8 @@ jobs:
       - name: Create manifest list and push
         working-directory: /tmp/digests
         run: |
-          flavor=${{ matrix.flavor }}
-          tags=$(jq -cr --arg version "${{ matrix.version }}" '.tags | map("-t " + . + "-" + $version) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON")
+          version=${{ matrix.version }}
+          tags=$(jq -cr --arg version "$version" '.tags | map("-t " + . + "-" + $version) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON")
           docker buildx imagetools create $tags \
             $(printf '${{ env.REGISTRY_IMAGE }}@sha256:%s ' *)
 
