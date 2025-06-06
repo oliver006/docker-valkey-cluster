@@ -8,13 +8,18 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        version:
+          - 8.1.1
+          - 8.0.3
+          - 7.2.9
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - name: Build the latest Docker image
         run: |
-            TAG=$(git rev-parse --short HEAD)
-            docker login -u pvogel -p ${{ secrets.DOCKER_PASSWORD }} 
-            docker buildx create --name mp-builder
-            docker buildx use mp-builder
-            docker buildx inspect --bootstrap
-            docker buildx build --attest type=provenance,mode=max --platform linux/amd64,linux/arm64 --push -t pvogel/valkey-cluster:8.0.3-${TAG} -t pvogel/valkey-cluster:latest .
+          export VERSION=${{ matrix.version }}
+          envsubst < Dockerfile.tmpl > Dockerfile
+          docker login -u mix3 -p ${{ secrets.DOCKER_PASSWORD }}
+          docker buildx create --use
+          docker buildx build --attest type=provenance,mode=max --platform linux/amd64,linux/arm64 --push -t mix3/valkey-cluster:$VERSION .
