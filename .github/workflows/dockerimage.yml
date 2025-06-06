@@ -5,7 +5,7 @@ on:
     branches:
       - main
 env:
-  REGISTRY_IMAGE: ${{ vars.DOCKERHUB_USER }}/valkery-cluster
+  REGISTRY_IMAGE: ${{ vars.DOCKERHUB_USER }}/valkey-cluster
 
 jobs:
   build:
