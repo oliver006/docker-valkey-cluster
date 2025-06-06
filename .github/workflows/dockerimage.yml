@@ -34,3 +34,4 @@ jobs:
           platforms: linux/amd64,linux/arm64
           tags: ${{ env.REGISTRY_IMAGE }}:${{ matrix.version }}
           push: true
+          pull: true
