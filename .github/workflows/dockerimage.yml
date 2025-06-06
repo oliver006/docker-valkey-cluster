@@ -11,12 +11,13 @@ jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         version:
           - 8.1.1
           - 8.0.3
           - 7.2.9
-        os:
+        distro:
           - bookworm
           - alpine
           - alpine3.21
@@ -29,7 +30,7 @@ jobs:
           username: ${{ vars.DOCKERHUB_USER }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - run: |
-          export IMAGE_TAG=${{ matrix.version }}-${{ matrix.os }}
+          export IMAGE_TAG=${{ matrix.version }}-${{ matrix.distro }}
           envsubst < Dockerfile.tmpl > Dockerfile
       - name: Build and push Docker image
         id: build
@@ -37,5 +38,5 @@ jobs:
         with:
           context: .
           platforms: linux/amd64,linux/arm64
-          tags: ${{ env.REGISTRY_IMAGE }}:${{ matrix.version }}
+          tags: ${{ env.REGISTRY_IMAGE }}:${{ matrix.version }}-${{ matrix.distro }}
           push: true
