@@ -1,5 +1,7 @@
 # docker-valkey-cluster
 
+Forked from https://github.com/mix3/valkey-redis-cluster
+
 Docker image for LOCAL development with a valkey cluster based on the published valkey docker image.
 
 ***Note:*** This is _not_ intended for production use; it runs 6 nodes of a valkey cluster in a single container intended as a convenience for local development and testing of code that uses a real valkey cluster (i.e. AWS Elasticache/Valkey, etc.).  
