@@ -32,5 +32,5 @@ jobs:
         with:
           context: .
           platforms: linux/amd64,linux/arm64
-          tags: ${{ env.REGISTRY_IMAGE }}:${{ steps.meta.outputs.version }}
+          tags: ${{ env.REGISTRY_IMAGE }}:${{ steps.meta.outputs.version }},ghcr.io/oliver006/valkey-cluster:${{ steps.meta.outputs.version }}
           push: true
