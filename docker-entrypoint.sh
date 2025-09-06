@@ -56,10 +56,10 @@ if [ "$1" = 'valkey-cluster' ]; then
       fi
 
       if [ "$port" -lt "$first_standalone" ]; then
-        PORT=${port} BIND_ADDRESS=${BIND_ADDRESS} envsubst < /valkey-conf/valkey-cluster.tmpl > /valkey-conf/${port}/valkey.conf
+        PORT=${port} VALKEY_PASSWORD=${VALKEY_PASSWORD:-} BIND_ADDRESS=${BIND_ADDRESS} envsubst < /valkey-conf/valkey-cluster.tmpl > /valkey-conf/${port}/valkey.conf
         nodes="$nodes $IP:$port"
       else
-        PORT=${port} BIND_ADDRESS=${BIND_ADDRESS} envsubst < /valkey-conf/valkey.tmpl > /valkey-conf/${port}/valkey.conf
+        PORT=${port} VALKEY_PASSWORD=${VALKEY_PASSWORD:-} BIND_ADDRESS=${BIND_ADDRESS} envsubst < /valkey-conf/valkey.tmpl > /valkey-conf/${port}/valkey.conf
       fi
 
       if [ "$port" -lt $(($INITIAL_PORT + $MASTERS)) ]; then
@@ -82,8 +82,15 @@ if [ "$1" = 'valkey-cluster' ]; then
     #
     /valkey/src/valkey-cli --version | grep -E "valkey-cli 3.0|valkey-cli 3.2|valkey-cli 4.0"
 
+    if [ -z "$VALKEY_PASSWORD" ];
+    then
+      PASSWD_ARG=""
+    else
+      PASSWD_ARG="-a $VALKEY_PASSWORD"
+    fi
+
     echo "Using valkey-cli to create the cluster"
-    echo "yes" | eval valkey-cli --cluster create --cluster-replicas "$SLAVES_PER_MASTER" "$nodes"
+    echo "yes" | eval valkey-cli --cluster create --cluster-replicas "$SLAVES_PER_MASTER" "$PASSWD_ARG" "$nodes"
 
     if [ "$SENTINEL" = "true" ]; then
       for port in $(seq $INITIAL_PORT $(($INITIAL_PORT + $MASTERS))); do

@@ -6,3 +6,5 @@ cluster-node-timeout 15000
 appendonly yes
 dir /valkey-data/${PORT}
 protected-mode no
+requirepass "${VALKEY_PASSWORD}"
+masterauth "${VALKEY_PASSWORD}"
