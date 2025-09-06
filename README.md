@@ -1,48 +1,14 @@
 # docker-valkey-cluster
 
-Forked from https://github.com/mix3/valkey-redis-cluster
-
 Docker image for LOCAL development with a valkey cluster based on the published valkey docker image.
+
+Forked from [mix3](https://github.com/mix3/valkey-redis-cluster) and modified to add support for `VALKEY_PASSWORD` and other features.
+This is mainly used for CI fr the [redis_exporter project](https://github.com/oliver006/redis_exporter).
+
 
 ***Note:*** This is _not_ intended for production use; it runs 6 nodes of a valkey cluster in a single container intended as a convenience for local development and testing of code that uses a real valkey cluster (i.e. AWS Elasticache/Valkey, etc.).  
 
 Why not just run a single node for local development?  Because you'll miss bugs in your code (i.e. sending a pipeline of commands that reference keys that reside in different nodes) that only show up when you have a cluster.  
-
-## Discussions, help, guides
-
-Github have recently released their `Discussions` feature into beta for more repositories across the github space. This feature is enabled on this repo since a while back.
-
-Becuase we now have this feature, the issues feature will NOT be a place where you can now ask general questions or need simple help with this repo and what it provides.
-
-What can you expect to find in there?
-
- - A place where you can freely ask any question regarding this repo.
- - Ask questions like `how do i do X?`
- - General help with problems with this repo
- - Guides written by me or any other contributer with useful examples and ansers to commonly asked questions and how to resolve thos problems.
- - Approved answers to questions marked and promoted by me if help is provided by the community regarding some questions
-
-
-## What this repo and container IS
-
-This repo exists as a resource to make it quick and simple to get a valkey cluster up and running with no fuss or issues with mininal effort. The primary use for this container is to get a cluster up and running in no time that you can use for demo/presentation/development. It is not intended or built for anything else.  I'll try to publish a new version of the container when new versions of valkey are released.  If you need a specific version, feel free to check out the repo and change the Dockerfile to start from the valkey image you need.
-
-
-## What this repo and container IS NOT
-
-This container that i have built is not supposed to be some kind of production container or one that is used within any environment other than running locally on your machine. It is not meant to be run on kubernetes or in any other prod/stage/test/dev environment as a fully working commponent in that environment. If that works for you and your use-case then awesome. But this container will not change to fit any other primary solution than to be used locally on your machine.
-
-If you are looking for something else or some production quality or kubernetes compatible solution then you are looking in the wrong repo. There is other projects or forks of this repo that is compatible for that situation/solution.
-
-For all other purposes other than what has been stated you are free to fork and/or rebuild this container using it as a template for what you need.
-
-
-
-## Valkey instances inside the container
-
-The cluster is 6 valkey instances running with 3 master & 3 slaves, one slave for each master. They run on ports 7000 to 7005 by default.  It's quite easy to change the ports and number of nodes by changing the environment variables in the docker-compose file or by passing them in as arguments to the `docker run` command.
-
-If the flag `-e "SENTINEL=true"` is passed there are 3 Sentinel nodes running on ports 5000 to 5002 matching cluster's master instances.
 
 
 
@@ -62,7 +28,7 @@ export VALKEY_CLUSTER_IP=0.0.0.0
 If you are downloading the container from dockerhub, you must add the internal IP environment variable to your `docker run` command.
 
 ```
-docker run -e "IP=0.0.0.0" -p 7000-7005:7000-7005 pvogel/valkey-cluster:latest
+docker run -e "IP=0.0.0.0" -p 7000-7005:7000-7005 oliver006/valkey-cluster:latest
 ```
 
 
@@ -124,7 +90,7 @@ Note that Docker also needs to be [configured](https://docs.docker.com/config/da
 Unfortunately Docker does not handle IPv6 NAT so, when acceptable, `--network host` can be used.
 
     # Example using plain docker
-    docker run -e "IP=::1" -e "BIND_ADDRESS=::" --network host grokzen/valkey-cluster:latest
+    docker run -e "IP=::1" -e "BIND_ADDRESS=::" --network host oliver006/valkey-cluster:latest
 
 
 ## Build alternative valkey versions
@@ -132,7 +98,7 @@ Unfortunately Docker does not handle IPv6 NAT so, when acceptable, `--network ho
 
 ### docker build
 
-My github actions use docker buildx to build a linux/arm64 and linux/amd64 image for the current valkey version. That image is pushed to `docker hub` as pvogel/valkey-cluster:<valkey-version>-<git tag> and pvogel/valkey-cluster:latest.
+My github actions use docker buildx to build a linux/arm64 and linux/amd64 image for the current valkey version. That image is pushed to `docker hub` as oliver006/valkey-cluster:<valkey-version>-<git tag> and oliver006/valkey-cluster:latest.
 
 
 # License
