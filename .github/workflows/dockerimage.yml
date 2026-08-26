@@ -37,6 +37,7 @@ jobs:
 
       - run: |
           export IMAGE_TAG=${{ steps.meta.outputs.version }}
+          export BASE_IMAGE_TAG=$(echo "$IMAGE_TAG" | sed -E 's/-r[0-9]+$//')
           envsubst < Dockerfile.tmpl > Dockerfile
       - uses: docker/build-push-action@v6
         with:
