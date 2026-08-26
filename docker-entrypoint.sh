@@ -49,6 +49,16 @@ if [ "$1" = 'valkey-cluster' ]; then
       BIND_ADDRESS=0.0.0.0
     fi
 
+    CLUSTER_DATABASES_CONFIG=
+    if [ -n "${CLUSTER_DATABASES:-}" ]; then
+      if ! [[ "$CLUSTER_DATABASES" =~ ^[1-9][0-9]*$ ]]; then
+        echo "CLUSTER_DATABASES must be a positive integer" >&2
+        exit 1
+      fi
+      CLUSTER_DATABASES_CONFIG="cluster-databases $CLUSTER_DATABASES"
+    fi
+    export CLUSTER_DATABASES_CONFIG
+
     max_port=$(($INITIAL_PORT + $MASTERS * ( $SLAVES_PER_MASTER  + 1 ) - 1))
     first_standalone=$(($max_port + 1))
     if [ "$STANDALONE" = "true" ]; then

@@ -78,6 +78,19 @@ Also note that the number of sentinels (if enabled) is the same as the number of
         SLAVES_PER_MASTER: 2
 
 
+## Change number of cluster databases
+
+Valkey 9.0 and newer can expose multiple logical databases in cluster mode.
+Set `CLUSTER_DATABASES` to a positive integer to configure them. If unset, the
+Valkey server default is preserved.
+
+    services:
+      valkey-cluster:
+        ...
+      environment:
+        CLUSTER_DATABASES: 4
+
+
 ## IPv6 support
 
 By default, valkey instances will bind and accept requests from any IPv4 network.
@@ -100,7 +113,7 @@ Unfortunately Docker does not handle IPv6 NAT so, when acceptable, `--network ho
 
 ### docker build
 
-My github actions use docker buildx to build a linux/arm64 and linux/amd64 image for the current valkey version. That image is pushed to `docker hub` as oliver006/valkey-cluster:<valkey-version>-<git tag> and oliver006/valkey-cluster:latest.
+My github actions use docker buildx to build a linux/arm64 and linux/amd64 image for the current valkey version. That image is pushed to Docker Hub as `oliver006/valkey-cluster:<git-tag>`. Wrapper-only releases use an `-rN` suffix, for example `9.1.1-r1` still uses the upstream Valkey `9.1.1` image.
 
 
 # License
